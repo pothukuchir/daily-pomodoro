@@ -1,5 +1,5 @@
 import React from 'react'
-import FullCalendar, { formatDate } from '@fullcalendar/react'
+import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
@@ -7,15 +7,21 @@ import { createEventId } from './event-utils'
 import 'bootstrap/dist/css/bootstrap.css';
 import External from './External'
 import Jumbotron from 'react-bootstrap/Jumbotron'
-import Timer from './Pomodoro/Timer'
-import TimeController from './Pomodoro/TimerController'
-import Sound from './Pomodoro/Sound'
+import Pomodoro from './Pomodoro/Pomodoro'
 
 export default class DemoApp extends React.Component {
 
-  state = {
-    weekendsVisible: true,
-    currentEvents: []
+  constructor(){
+    super()
+    this.state = {
+      timerId: 0,
+      timerRunning: false,
+      currentTime: "25 : 00",
+      cycle: "Session",
+      workTime: 25,
+      breakTime: 5,
+      sound: "on"    
+    }
   }
 
   render() {
@@ -30,9 +36,7 @@ export default class DemoApp extends React.Component {
               center: 'title',
               right: 'dayGridMonth,timeGridWeek,timeGridDay'
             }}
-            theme='true'
             themeSystem='bootstrap'
-            themeName='Darkly'
             initialView='timeGridDay'
             editable={true}
             selectable={true}
@@ -45,11 +49,7 @@ export default class DemoApp extends React.Component {
             eventsSet={this.handleEvents} // called after events are initialized/added/changed/removed
             defaultTimedEventDuration='00:25:00'
             droppable={true}
-            /* you can update a remote database when these fire:
-            eventAdd={function(){}}
-            eventChange={function(){}}
-            eventRemove={function(){}}
-            */
+            
           />
         </div>
       </div>
@@ -65,14 +65,73 @@ export default class DemoApp extends React.Component {
         <div>
           <External/>
         </div>
-        <div className="pomodoro-main">
-          <h1>Pomodoro Clock</h1>
-          <Timer/>
-          <TimeController/>
-          <Sound/>
-        </div>
+          <Pomodoro/>
       </div>
     )
+  }
+
+  startTimer = (duration) => {
+    this.setState({timerRunning:true})
+    let time = duration * 60
+    let minutes;
+    let seconds;
+    let runningTimer = setInterval(()=>{
+      this.setState({
+        timerId: runningTimer
+      })
+      minutes = Math.floor(time/60)
+      seconds = time - minutes*60
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      seconds = seconds < 10 ? "0" + seconds : seconds;
+      this.setState({currentTime : `${minutes} : ${seconds}`})
+      if(time === 0){
+        if(this.state.cycle === "Session"){
+          this.setState({
+            cycle:"Break",
+            timerRunning: false
+          })
+        } else {
+          this.setState({
+            cycle:"Session",
+            timerRunning: false
+          })
+          clearInterval(this.state.timerId)
+          this.startTimer(this.state.workTime)
+        }
+      }
+    }, 1000);
+  }
+
+  // Increment and decrement time functions
+  incrementWorkTime = () => {
+    this.setState({
+      workTime: this.state.workTime + 1
+    })
+  }
+
+  decrementWorkTime = () => {
+    this.setState({
+      workTime: this.state.workTime - 1
+    })
+  }
+
+  incrementBreakTime = () => {
+    this.setState({
+      breakTime: this.state.breakTime + 1
+    })
+  }
+
+  decrementBreakTime = () => {
+    this.setState({
+      breakTime: this.state.breakTime - 1
+    })
+  }
+
+
+  setSound = (sound) => {
+    this.setState({
+      sound: sound
+    })
   }
 
   handleWeekendsToggle = () => {

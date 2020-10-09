@@ -69,3 +69,57 @@ b { /* used for event dates/times */
   margin-top: 5px;
   margin-bottom: 5px;
 }
+main {
+  display: flex;
+  flex-direction: column;
+  height: 90vh;
+  justify-content: center;
+  align-items: center;
+}
+
+.interval-container{
+  display: flex;
+  margin: 0 40px;
+  align-items: center;
+}
+.interval-length-container{
+  display: flex;
+  margin-left: 40px;
+}
+.interval-length{
+  font-size: 2rem;
+  margin: 0 10px;
+}
+.timer-title{
+  margin-left: 190px;
+}
+
+.timer-button{
+  padding: 5px 12px;
+  margin: 0 10px;
+  height: 25px;
+  background-color: #263646;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  color: #eee;  
+}
+
+.timer-container{
+  border: 2px solid #263646;
+  margin-top: 40px;
+  margin-left: 95px;
+  border-radius: 25px;
+  width: 300px;
+  text-align: center;
+}
+.timer{
+  font-size: 2rem;
+}
+.timer-actions{
+  margin-top: 20px;
+  margin-left: 130px;
+}
+.break-session-text{
+  margin-left: 70px;
+}

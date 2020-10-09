@@ -74,7 +74,7 @@ export class External extends Component {
             <div id="external-events">
                 <h4>Add events</h4>
                     {this.state.list.map(item => {return(
-                            <div className='fc-custom fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event'>
+                            <div className='fc-custom fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event' key={item.value}>
                                 <div className='fc-event-main'>{item.value}</div>
                             </div>
 
